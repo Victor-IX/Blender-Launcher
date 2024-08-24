@@ -20,6 +20,7 @@ from modules.settings import (
     get_minimum_blender_stable_version,
     get_scrape_automated_builds,
     get_scrape_stable_builds,
+    get_scrape_alternative_stable_builds,
     get_show_daily_archive_builds,
     get_show_experimental_archive_builds,
     get_show_patch_archive_builds,
@@ -310,7 +311,14 @@ class Scraper(QThread):
         return BuildInfo(link, str(subversion), build_hash, commit_time, branch)
 
     def scrap_stable_releases(self):
-        url = "https://download.blender.org/release/"
+        if get_scrape_alternative_stable_builds():
+            url = "https://www.blender.org/download/"
+        else:
+            url = "https://download.blender.org/release/"
+        
+        
+        print (url) 
+        
         r = self.manager.request("GET", url)
 
         if r is None:

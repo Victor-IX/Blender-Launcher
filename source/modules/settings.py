@@ -464,6 +464,14 @@ def get_scrape_stable_builds() -> bool:
 
 def set_scrape_stable_builds(b: bool):
     get_settings().setValue("scrape_stable_builds", b)
+    
+
+def get_scrape_alternative_stable_builds() -> bool:
+    return get_settings().value("scrape_alternative_stable_builds", defaultValue=False, type=bool)
+
+
+def set_scrape_alternative_stable_builds(b: bool):
+    get_settings().setValue("scrape_alternative_stable_builds", b)
 
 
 def get_scrape_automated_builds() -> bool:

@@ -15,6 +15,7 @@ from modules.settings import (
     get_quick_launch_key_seq,
     get_scrape_automated_builds,
     get_scrape_stable_builds,
+    get_scrape_alternative_stable_builds,
     get_show_daily_archive_builds,
     get_show_experimental_archive_builds,
     get_show_patch_archive_builds,
@@ -31,6 +32,7 @@ from modules.settings import (
     set_quick_launch_key_seq,
     set_scrape_automated_builds,
     set_scrape_stable_builds,
+    set_scrape_alternative_stable_builds,
     set_show_daily_archive_builds,
     set_show_experimental_archive_builds,
     set_show_patch_archive_builds,
@@ -90,11 +92,15 @@ class BlenderBuildsTabWidget(SettingsFormWidget):
         self.ScrapeStableBuilds = QCheckBox(self)
         self.ScrapeStableBuilds.setChecked(get_scrape_stable_builds())
         self.ScrapeStableBuilds.clicked.connect(self.toggle_scrape_stable_builds)
-        self.ScrapeStableBuilds.setText("Scrape stable builds")
+        self.ScrapeStableBuilds.setText("Scrape Stable Builds")
+        self.ScrapeAlternativeStableBuilds = QCheckBox(self)
+        self.ScrapeAlternativeStableBuilds.setChecked(get_scrape_alternative_stable_builds())
+        self.ScrapeAlternativeStableBuilds.clicked.connect(self.toggle_scrape_alternative_stable_builds)
+        self.ScrapeAlternativeStableBuilds.setText("Scrape Alternative Stable Builds")
         self.ScrapeAutomatedBuilds = QCheckBox(self)
         self.ScrapeAutomatedBuilds.setChecked(get_scrape_automated_builds())
         self.ScrapeAutomatedBuilds.clicked.connect(self.toggle_scrape_automated_builds)
-        self.ScrapeAutomatedBuilds.setText("Scrape automated builds (daily/experimental/patch)")
+        self.ScrapeAutomatedBuilds.setText("Scrape Automated Builds (daily/experimental/patch)")
 
         # Show Archive Builds
         self.show_daily_archive_builds = QCheckBox(self)
@@ -118,10 +124,11 @@ class BlenderBuildsTabWidget(SettingsFormWidget):
         self.scraping_builds_layout.addWidget(QLabel("Minimum stable build to scrape", self), 2, 0, 1, 1)
         self.scraping_builds_layout.addWidget(self.MinStableBlenderVer, 2, 1, 1, 1)
         self.scraping_builds_layout.addWidget(self.ScrapeStableBuilds, 3, 0, 1, 2)
-        self.scraping_builds_layout.addWidget(self.ScrapeAutomatedBuilds, 4, 0, 1, 2)
-        self.scraping_builds_layout.addWidget(self.show_daily_archive_builds, 5, 0, 1, 2)
-        self.scraping_builds_layout.addWidget(self.show_experimental_archive_builds, 6, 0, 1, 2)
-        self.scraping_builds_layout.addWidget(self.show_patch_archive_builds, 7, 0, 1, 2)
+        self.scraping_builds_layout.addWidget(self.ScrapeAlternativeStableBuilds, 4, 0, 1, 2)
+        self.scraping_builds_layout.addWidget(self.ScrapeAutomatedBuilds, 5, 0, 1, 2)
+        self.scraping_builds_layout.addWidget(self.show_daily_archive_builds, 6, 0, 1, 2)
+        self.scraping_builds_layout.addWidget(self.show_experimental_archive_builds, 7, 0, 1, 2)
+        self.scraping_builds_layout.addWidget(self.show_patch_archive_builds, 8, 0, 1, 2)
         self.buildcheck_settings.setLayout(self.scraping_builds_layout)
 
         # Downloading builds settings
@@ -277,6 +284,10 @@ class BlenderBuildsTabWidget(SettingsFormWidget):
     def toggle_scrape_stable_builds(self, is_checked):
         set_scrape_stable_builds(is_checked)
         self.ScrapeStableBuilds.setChecked(is_checked)
+    
+    def toggle_scrape_alternative_stable_builds(self, is_checked):
+        set_scrape_alternative_stable_builds(is_checked)
+        self.ScrapeAlternativeStableBuilds.setChecked(is_checked)
 
     def toggle_scrape_automated_builds(self, is_checked):
         set_scrape_automated_builds(is_checked)
