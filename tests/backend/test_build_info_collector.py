@@ -41,11 +41,16 @@ def test_build_displays():
     assert BuildInfo._display_version(Version(2, 83, 0, prerelease="alpha")) == "2.83alpha"  # noqa: SLF001
     # NGL the _display_label logic is kinda confusing
     assert BuildInfo._display_label("lts", Version(0, 0, 1), "") == "LTS"  # noqa: SLF001
-    assert BuildInfo._display_label("experimental", Version(4, 4, 0, prerelease="npr-prototypers"), "4.4.0-npr-prototype") == "Npr Prototypers"  # noqa: SLF001
+    assert (
+        BuildInfo._display_label("experimental", Version(4, 4, 0, prerelease="npr-prototypers"), "4.4.0-npr-prototype")  # noqa: SLF001
+        == "Npr Prototypers"
+    )
     assert BuildInfo._display_label("experimental", Version(4, 4, 0), "4.4.0-npr-prototype") == "Npr-Prototype"  # noqa: SLF001
     assert BuildInfo._display_label("daily", Version(2, 80, 0, prerelease="rc2"), "2.80.0-rc2") == "Rc2"  # noqa: SLF001
     assert BuildInfo._display_label("daily", Version(2, 80, 0), "2.80.0-rc2") == "Rc2"  # noqa: SLF001
-    assert BuildInfo._display_label("stable", Version(2, 80, 0, prerelease="rc2"), "2.80.0-rc2") == "Release Candidate 2"  # noqa: SLF001
+    assert (
+        BuildInfo._display_label("stable", Version(2, 80, 0, prerelease="rc2"), "2.80.0-rc2") == "Release Candidate 2"  # noqa: SLF001
+    )
     # Build variant case -- this could possibly be removed
     p = sys.platform
     sys.platform = "darwin"
