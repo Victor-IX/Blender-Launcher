@@ -27,6 +27,11 @@ license = { text = "GPL3" }
 [project.optional-dependencies]
 docs = ["mkdocs", "mkdocs-material>=9.5.10"]
 ruff = ["ruff>=0.3.5"]
+testing = [
+    "pytest-cov>=6.0.0",
+    "pytest>=8.3.4",
+]
+
 
 [build-system]
 build-backend = "pdm.backend"
@@ -92,3 +97,6 @@ profile = "black"
 
 [tool.setuptools]
 py-modules = ["source"]
+
+[tool.pytest.ini_options]
+pythonpath = "source"
