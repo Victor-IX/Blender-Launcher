@@ -33,6 +33,7 @@ def test_parser():
 # TODO: Make all branches of this test, and get_args, OS-agnostic
 def test_get_args():
     root = os.path.abspath(os.sep)
+    win_root = root.replace("\\", "")
     info = BuildInfo(os.path.join(root, "blender"), "4.0.0", "ffffffff", datetime.datetime(2024, 12, 12), "daily")  # noqa: DTZ001
     info_c = BuildInfo(
         os.path.join(root, "blender"),
@@ -48,37 +49,37 @@ def test_get_args():
     x = [
         (
             get_args(info=info),
-            ["C:\\blender\\blender.exe"],
+            [win_root + "/blender/blender.exe"],
             'nohup "/blender/blender" ',
             "open -W -n /blender/Blender/Blender.app --args",
         ),
         (
             get_args(info=info, linux_nohup=False),
-            ["C:\\blender\\blender.exe"],
+            [win_root + "/blender/blender.exe"],
             ' "/blender/blender" ',
             "open -W -n /blender/Blender/Blender.app --args",
         ),
         (
             get_args(info=info, exe="bforartists.exe"),
-            ["cmd", "/C", "C:\\blender\\bforartists.exe"],
+            ["cmd", "/C", win_root + "/blender/bforartists.exe"],
             'nohup "/blender/blender" ',
             "open -W -n /blender/Blender/Blender.app --args",
         ),
         (
             get_args(info=info_c),
-            ["C:\\blender\\bforartists"],
+            [win_root + "/blender/bforartists"],
             'nohup "/blender/bforartists" ',
             "open -W -n /blender/Blender/Blender.app --args",
         ),
         (
             get_args(info=info, launch_mode=LaunchOpenLast()),
-            ["C:\\blender\\blender.exe", "--open-last"],
+            [win_root + "/blender/blender.exe", "--open-last"],
             'nohup "/blender/blender"  --open-last',
             "open -W -n /blender/Blender/Blender.app --args --open-last",
         ),
         (
             get_args(info=info, launch_mode=LaunchWithBlendFile(Path(root) / "file.blend")),
-            ["C:\\blender\\blender.exe", "/file.blend"],
+            [win_root + "/blender/blender.exe", win_root + "/file.blend"],
             'nohup "/blender/blender"  "/file.blend"',
             'open -W -n /blender/Blender/Blender.app --args --open-last "/file.blend"',
         ),
