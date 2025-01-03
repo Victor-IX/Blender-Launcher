@@ -12,7 +12,7 @@ from tests.config import TESTED_BUILD
 
 @pytest.mark.skipif(
     TESTED_BUILD is None or not os.path.exists(TESTED_BUILD),
-    reason="valid tesing build is not provided",
+    reason="valid testing build is not provided",
 )
 def test_read_blender_version():
     assert TESTED_BUILD is not None

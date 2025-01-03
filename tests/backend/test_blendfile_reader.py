@@ -9,7 +9,7 @@ from modules.blendfile_reader import (
 )
 from semver import Version
 
-# This is innacurate to a normal scenario but they should scale properly
+# This is inaccurate to a normal scenario but they should scale properly
 BASIC = b"BLENDER-v404"
 GZIP = b"\x1f\x8b\x08\x00]nwg\x02\xffs\xf2q\xf5sq\r\xd2-310\x01\x00\x93\xd4+E\x0c\x00\x00\x00"
 ZSTD = b"(\xb5/\xfd \x0ca\x00\x00BLENDER-v404"
