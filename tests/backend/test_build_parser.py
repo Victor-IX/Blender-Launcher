@@ -22,6 +22,10 @@ def test_parser():
         (("blender-4.1.0-linux-x64.tar.xz", False), Version(4, 1, 0)),
         (("2.80 (sub 75)", False), Version(2, 80, 0, prerelease="(sub 75)")),
         (("2.79rc1", False), Version(2, 79, 0, prerelease="rc1")),
+        (("3.6", False), Version(3, 6, 0)),
+        (("v4.4.4", True), Version(4, 4, 4)),
+        (("BLENDER1.0", True), Version(1, 0, 0)),
+        (("4.4.0 Alpha", False), Version(4, 4, 0, prerelease="alpha")),
     ]
     for (txt, search), ver in args:
         print(txt, search, ver)

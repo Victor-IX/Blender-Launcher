@@ -15,7 +15,7 @@ def pytest_sessionstart(session: pytest.Session):
         # move the dev's config to a different spot
         if cfg_existed:
             # print("MOVE ", cfg, "TO", cfg_bak)
-            shutil.move(cfg, cfg_bak)
+            shutil.copy(cfg, cfg_bak)
 
 
 def pytest_sessionfinish(session: pytest.Session, exitstatus: int | pytest.ExitCode):
@@ -23,7 +23,7 @@ def pytest_sessionfinish(session: pytest.Session, exitstatus: int | pytest.ExitC
         # move the dev's config back
         if cfg_existed:
             # print("MOVE ", cfg_bak, "TO", cfg)
-            shutil.move(cfg_bak, cfg)
+            shutil.copy(cfg_bak, cfg)
         elif cfg.exists():  # the cfg was made by tests and should be deleted
             cfg.unlink()
 
