@@ -29,10 +29,8 @@ logger = logging.getLogger()
 matchers = tuple(
     map(
         re.compile,
-        (  #                                                                                   # format                                 examples
-            r"(?P<ma>\d+)\.(?P<mi>\d+)\.(?P<pa>\d+)[ \-](?P<pre>[^+]*[^wli][^ndux][^s]?)",  # <major>.<minor>.<patch> <Prerelease>   2.80.0 Alpha  -> 2.80.0-alpha
-            # r"(?P<ma>\d+)\.(?P<mi>\d+)\.(?P<pa>\d+)",  #                                       <major>.<minor>.<patch>                3.0.0         -> 3.0.0
-            r"(?P<ma>\d+)\.(?P<mi>\d+)[ \-](?P<pre>[^+]*[^wli][^ndux][^s]?)",
+        (  #                                                                                     format                                 examples
+            r"(?P<ma>\d+)\.(?P<mi>\d+)(?:\.(?P<pa>\d+))?[ \-](?P<pre>[^\+]*)",  #                <major>.<minor>.<patch> <Prerelease>   2.80.0 Alpha  -> 2.80.0-alpha
             r"(?P<ma>\d+)\.(?P<mi>\d+) \(sub (?P<pa>\d+)\)",  #                                  <major>.<minor> (sub <patch>)          2.80 (sub 75) -> 2.80.75
             r"(?P<ma>\d+)\.(?P<mi>\d+)$",  #                                                     <major>.<minor>                        2.79          -> 2.79.0
             r"(?P<ma>\d+)\.(?P<mi>\d+)(?P<pre>[^-]{0,3})",  #                                    <major>.<minor><[chars]*(1-3)>         2.79rc1       -> 2.79.0-rc1
@@ -40,7 +38,27 @@ matchers = tuple(
         ),
     )
 )
-initial_cleaner = re.compile(r"(?!blender-)\d.*(?=-linux|-windows)")
+initial_cleaner = re.compile(r"(?:blender|v)-?(\d.*)", flags=re.IGNORECASE)
+
+
+@cache
+def simple_clean(s: str):
+    """
+    Cleans a version string by removing extraneous information like platform identifiers and "v" prefixes.
+    This function aims to standardize Blender version strings for easier comparison and handling.
+    """
+    captures = initial_cleaner.search(s)
+    if captures is not None:
+        grp = captures.group(1)
+        s = s[s.find(grp) :]
+
+    if (idx := s.find("-windows")) != -1:
+        s = s[:idx]
+
+    if (idx := s.find("-linux")) != -1:
+        s = s[:idx]
+
+    return s
 
 
 @cache
@@ -60,13 +78,11 @@ def parse_blender_ver(s: str, search=False) -> Version:
     try:
         return Version.parse(s)
     except ValueError as e:
-        m = initial_cleaner.search(s)
-        if m is not None:
-            s = m.group()
-            try:
-                return Version.parse(s)
-            except ValueError:
-                pass
+        s = simple_clean(s)
+        try:
+            return Version.parse(s)
+        except ValueError:
+            pass
 
         major = 0
         minor = 0
@@ -92,7 +108,7 @@ def parse_blender_ver(s: str, search=False) -> Version:
 
         major = int(g.group("ma"))
         minor = int(g.group("mi"))
-        if "pa" in g.groupdict():
+        if "pa" in g.groupdict() and g.group("pa") is not None:
             patch = int(g.group("pa"))
         if "pre" in g.groupdict() and g.group("pre") is not None:
             prerelease = g.group("pre").casefold().strip("- ")
